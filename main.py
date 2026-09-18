@@ -5,7 +5,8 @@ app = FastAPI()
 
 @app.get("/")
 def root():
+    _main_()
     return {"message": "bot is up"}
  
-_main_()
+
 
