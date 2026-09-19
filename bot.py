@@ -20,7 +20,9 @@ thread = None
 
 BotToken = os.getenv("TOKEN")
 bot = telebot.TeleBot(BotToken)
- 
+
+EIGHT_DAYS_ECONOM='{"departure":6,"destination":[106],"date":{"from":"10.10.2026","till":"10.10.2026"},"nights":{"from":8,"till":8,"min":1,"max":28},"adults":2,"children":[],"touroperators":[],"stars":[1,2,3,4,5],"hotels":[8357,3087,49610],"resorts":[],"subResorts":[],"mealType":0,"hotelStatus":false,"firstCoastline":false,"minCost":0,"maxCost":99999999,"cid":1,"sourceCurrency":"RUB","offerCurrency":"RUB","source":"search_online_page","debug":0,"page":1}'
+TEN_DAYS_LUX='{"departure":6,"destination":[106],"date":{"from":"10.10.2026","till":"10.10.2026"},"nights":{"from":10,"till":10,"min":1,"max":28},"adults":2,"children":[],"touroperators":[],"stars":[1,2,3,4,5],"hotels":[3092,49610],"resorts":[],"subResorts":[],"mealType":0,"hotelStatus":false,"firstCoastline":false,"minCost":0,"maxCost":99999999,"cid":1,"sourceCurrency":"RUB","offerCurrency":"RUB","source":"search_online_page","debug":0,"page":1}'
 
 @bot.message_handler(commands=['start'])
 def welcome(message):
@@ -50,8 +52,7 @@ def lalala(message):
 
 
 
-def check_price():
-    body = '{"departure":6,"destination":[106],"date":{"from":"10.10.2026","till":"10.10.2026"},"nights":{"from":8,"till":8,"min":1,"max":28},"adults":2,"children":[],"touroperators":[],"stars":[1,2,3,4,5],"hotels":[8357,3087,49610],"resorts":[],"subResorts":[],"mealType":0,"hotelStatus":false,"firstCoastline":false,"minCost":0,"maxCost":99999999,"cid":1,"sourceCurrency":"RUB","offerCurrency":"RUB","source":"search_online_page","debug":0,"page":1}'
+def check_price(body, days):
     response = requests.post('https://search.bankturov.ru/api/v3/search', data=body)
     response = json.loads(response.text)
     hotels = []
@@ -65,7 +66,7 @@ def check_price():
 
     prices = []
     for obj in hotels:
-        val = f"{obj['date']}: {obj['residenses']['hotel_name']} - {obj['costValues']['RUB']['rounded']}"
+        val = f"ВЫЛЕТ - {obj['date']} / {days} дней: {obj['residenses']['hotel_name']} - {obj['costValues']['RUB']['rounded']}руб."
         # val = { "name": obj['residenses']['hotel_name'], "price": obj['costValues']['RUB']['rounded'] }
         prices.append(val)
 
@@ -73,7 +74,9 @@ def check_price():
 
 
 def gen_msg():
-    prices = check_price()
+    pricesEight = check_price(EIGHT_DAYS_ECONOM, 8)
+    pricesTen = check_price(TEN_DAYS_LUX, 10)
+    prices = pricesEight + pricesTen
     text = ''
 
     for line in prices:
