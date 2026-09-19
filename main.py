@@ -1,12 +1,12 @@
 from bot import _main_
-from fastapi import FastAPI
+# from fastapi import FastAPI
 
-app = FastAPI()
+# app = FastAPI()
 
-@app.get("/")
-def root():
-    _main_()
-    return {"message": "bot is up"}
+# @app.get("/")
+# def root():
+#     return {"message": "bot is up"}
  
+_main_()
 
 
